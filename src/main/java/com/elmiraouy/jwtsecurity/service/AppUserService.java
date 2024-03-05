@@ -16,5 +16,4 @@ public interface AppUserService {
     public AppUserResponseDto deleteUser(Long id);
     public AppUserResponseDto updateUser(Long id ,AppUserRequestDto userRequestDto) throws AppUserException;
     public void addTokenToUser(AppUser appUser, Token token) throws AppUserException;
-    public AppUserResponseDto appUserToDto(AppUser appUser);
 }

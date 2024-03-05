@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -24,11 +25,26 @@ public class AppUser implements UserDetails {
 
     private String firstName;
     private String lastName;
-
     private String password;
-
     private String email;
+    private String telephone;
+    private String address;
+    private String uuid;
+    private String ville;
+    private Date uuidExpiredDate;
+    private String status ;
 
+    public AppUser(Long id, String firstName, String lastName, String passWord, String email, String telephone, String address, String uuid,String ville) {
+        this.id=id;
+        this.firstName=firstName;
+        this.lastName=lastName;
+        this.password=passWord;
+        this.email=email;
+        this.telephone=telephone;
+        this.address=address;
+        this.ville=ville;
+        this.uuid=uuid;
+    }
 
     @Override
     public String getPassword() {
@@ -43,7 +59,13 @@ public class AppUser implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<AppRole> appRoles =new ArrayList<>();
     @OneToOne
-    private Token token;
+    private Token token=new Token();
+    @ManyToMany(mappedBy = "users")
+    private Collection<Customer> customers;
+    @ManyToMany(mappedBy = "users")
+    private Collection<Hub> hubs;
+    @ManyToMany(mappedBy = "users")
+    private Collection<Ticket> tickets;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();

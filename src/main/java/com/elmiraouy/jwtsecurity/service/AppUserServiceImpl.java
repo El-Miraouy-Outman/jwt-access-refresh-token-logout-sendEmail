@@ -24,6 +24,8 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public List<AppUserResponseDto> findAllUser() {
         List<AppUser> users=appUserRepository.findAll();
+
+
         return users.stream().map(appUserDtoMapper).toList();
 
     }
@@ -33,14 +35,14 @@ public class AppUserServiceImpl implements AppUserService {
         AppUser user=appUserRepository.findByEmail(email)
                 .orElseThrow(() -> new AppUserException(
                         "User With id [%s] not ".formatted(email)));
-        return appUserToDto(user);
+        return appUserDtoMapper.appUserToDto(user);
     }
     @Override
     public AppUserResponseDto findAppUserById(Long id) throws AppUserException {
         AppUser appUser=appUserRepository.findAppUserById(id)
                 .orElseThrow(() -> new AppUserException(
                         "User With id [%s] not ".formatted(id)));
-       return appUserToDto(appUser);
+       return appUserDtoMapper.appUserToDto(appUser);
 
     }
 
@@ -70,20 +72,6 @@ public class AppUserServiceImpl implements AppUserService {
         appUser1.setToken(token);
         appUserRepository.save(appUser1);
     }
-    @Override
-    public AppUserResponseDto appUserToDto(AppUser appUser){
-        return  new AppUserResponseDto(
-                appUser.getId(),
-                appUser.getFirstName(),
-                appUser.getLastName(),
-                appUser.getEmail(),
-                appUser.getToken().getAccessToken(),
-                appUser.getToken().getRefreshToken(),
-                appUser.getAppRoles()
-                        .stream()
-                        .map(AppRole::getRoleName)
-                        .collect(Collectors.toList())
-        );
-    }
+
 
 }
