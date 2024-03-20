@@ -30,8 +30,6 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 
@@ -173,9 +171,7 @@ public class AuthenticationService {
 
         AppRole appRole=appRoleRepository.findByRoleName("SUPPORT").orElseThrow(null);
 
-        Collection<AppRole> appRoles=new ArrayList<>();
-        appRoles.add(appRole);
-        appUser.setAppRoles(appRoles);
+        appUser.setAppRole(appRole);
 
         AppUser saveUser = appUserRepository.save(appUser);
         AppUserResponseDto response=AppUserResponseDto.builder().build();
@@ -195,13 +191,13 @@ public class AuthenticationService {
         appUser.setUuid(uuid);
         appUser.setUuidExpiredDate(expirationDate);
         System.out.println(" uuid Generer :"+uuid);
-       /* try{
+        try{
             MailStructure mailStructure = mailService.confirmedEmail(appUserRequestDto.getEmail(),uuid);
             mailService.sendMail(mailStructure);
         }
         catch (Exception c){
             throw  new ConnectException("Verifier votre email ou connection internet: ");
-        }*/
+        }
         AppUser saveUser = appUserRepository.save(appUser);
         AppUserResponseDto response=AppUserResponseDto.builder().build();
         BeanUtils.copyProperties(saveUser,response);
@@ -215,13 +211,10 @@ public class AuthenticationService {
                         "User With id [%s] not ".formatted(appUserRequestDto.getEmail())));
         if( appUserRequestDto.getUuid() == null ){
             System.out.println("===============1");
-            //if(!appUserRequestDto.getPassWord().equals(passwordEncoder.encode(appUser.getPassword()))){
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                         appUserRequestDto.getEmail(),
                         appUserRequestDto.getPassWord()
                 ));
-               //: throw new AppUserException(" Mot de passe Entrer n\'est pas de l\'utilisateur [%s]".formatted(appUserRequestDto.getEmail()));
-            //}
             appUser.setPassword(passwordEncoder.encode(appUserRequestDto.getNewPassWord()));
         }
         else{

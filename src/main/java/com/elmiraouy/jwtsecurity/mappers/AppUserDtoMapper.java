@@ -2,12 +2,10 @@ package com.elmiraouy.jwtsecurity.mappers;
 
 import com.elmiraouy.jwtsecurity.Dto.request.AppUserRequestDto;
 import com.elmiraouy.jwtsecurity.Dto.response.AppUserResponseDto;
-import com.elmiraouy.jwtsecurity.entities.AppRole;
 import com.elmiraouy.jwtsecurity.entities.AppUser;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class AppUserDtoMapper implements Function<AppUser, AppUserResponseDto> {
@@ -36,10 +34,14 @@ public class AppUserDtoMapper implements Function<AppUser, AppUserResponseDto> {
                 appUser.getAddress(),
                 appUser.getTelephone(),
                 appUser.getVille(),
-                appUser.getAppRoles()
-                        .stream()
-                        .map(AppRole::getRoleName)
-                        .collect(Collectors.toList())
+                appUser.getAppRole().getRoleName()
         );
+    }
+    public AppUser appUserDtoToRequest(AppUserRequestDto appUserRequestDto){
+        return   AppUser.builder()
+                .address(appUserRequestDto.getAddress())
+                .ville(appUserRequestDto.getVille())
+                .email(appUserRequestDto.getEmail())
+                .build();
     }
 }

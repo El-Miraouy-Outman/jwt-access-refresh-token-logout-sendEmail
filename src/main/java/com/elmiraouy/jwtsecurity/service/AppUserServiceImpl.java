@@ -6,6 +6,8 @@ import com.elmiraouy.jwtsecurity.entities.AppRole;
 import com.elmiraouy.jwtsecurity.entities.AppUser;
 import com.elmiraouy.jwtsecurity.entities.Token;
 import com.elmiraouy.jwtsecurity.handlerException.AppUserException;
+import com.elmiraouy.jwtsecurity.handlerException.EntityNotFound;
+import com.elmiraouy.jwtsecurity.handlerException.EntityNotFoundException;
 import com.elmiraouy.jwtsecurity.mappers.AppUserDtoMapper;
 import com.elmiraouy.jwtsecurity.repository.AppUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,21 +22,18 @@ public class AppUserServiceImpl implements AppUserService {
 
     private final AppUserRepository appUserRepository;
     private final AppUserDtoMapper appUserDtoMapper;
-    private final TokenService tokenService;
+
     @Override
     public List<AppUserResponseDto> findAllUser() {
-        List<AppUser> users=appUserRepository.findAll();
-
-
-        return users.stream().map(appUserDtoMapper).toList();
+                return appUserRepository.findAll().stream().map(appUserDtoMapper).toList();
 
     }
 
     @Override
-    public AppUserResponseDto findUserByEmail(String email) throws AppUserException {
+    public AppUserResponseDto findUserByEmail(String email) throws  EntityNotFoundException {
         AppUser user=appUserRepository.findByEmail(email)
-                .orElseThrow(() -> new AppUserException(
-                        "User With id [%s] not ".formatted(email)));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "User With id [%s] not found".formatted(email)));
         return appUserDtoMapper.appUserToDto(user);
     }
     @Override

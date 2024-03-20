@@ -18,9 +18,9 @@ public class AppUserResponseDto {
     private String address;
     private   String telephone;
     private   String ville;
-    private    List<String> roles;
+    private   String roles;
 
-    public AppUserResponseDto(Long id, String firstName, String lastName, String email, String accessToken, String refreshToken, String address, String telephone, String ville, List<String> roles) {
+    public AppUserResponseDto(Long id, String firstName, String lastName, String email, String accessToken, String refreshToken, String address, String telephone, String ville, String roles) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

@@ -1,8 +1,10 @@
 package com.elmiraouy.jwtsecurity.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -20,7 +22,9 @@ public class Ticket {
     private Long associateUserId ;
     private String subject ;
     private String description;
+    @Enumerated(EnumType.STRING)
     private StatusTicket status;
+    @Enumerated(EnumType.STRING)
     private PriorityTicket priority;
     private Date creationDate;
     private Date updateDate;
@@ -28,12 +32,39 @@ public class Ticket {
     private String finalSolution;
 
     @ManyToMany
-    private Collection<AppUser> users;
+    private Collection<AppUser> users=new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
     @ManyToOne
     @JoinColumn(name = "resolution_id")
     private ResolutionProblem resolutionProblem;
+
+    public Ticket(
+            Long id,
+            Long updateUserId,
+            Long associateUserId,
+            String subject,
+            String description,
+            StatusTicket status,
+            PriorityTicket priority,
+            Date creationDate,
+            Date updateDate,
+            Date closureDate,
+            String finalSolution
+    ) {
+        this.id = id;
+        this.updateUserId = updateUserId;
+        this.associateUserId = associateUserId;
+        this.subject = subject;
+        this.description = description;
+        this.status = status;
+        this.priority = priority;
+        this.creationDate = creationDate;
+        this.updateDate = updateDate;
+        this.closureDate = closureDate;
+        this.finalSolution = finalSolution;
+    }
+
 
 }

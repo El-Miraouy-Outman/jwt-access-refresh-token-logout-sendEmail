@@ -3,8 +3,7 @@ package com.elmiraouy.jwtsecurity.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 @Entity
 @Builder
@@ -12,6 +11,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "customers")
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +36,18 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer")
     private Collection<Ticket> tickets;
+    @OneToMany(mappedBy = "customer")
+    private Collection<HistoryCustomer> listHistoryCustomers;
+    @ManyToMany
+    @JoinTable(name = "customers_hubs",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "hubs_id"))
+    private Collection<Hub> hubs;
 
+    @ElementCollection
+    @CollectionTable(name = "customer_house_names",
+            joinColumns = @JoinColumn(name = "customer_id"))
+    @MapKeyColumn(name = "house_names_key")
+    private Map<String,String> housesNames = new HashMap<>();
 
 }

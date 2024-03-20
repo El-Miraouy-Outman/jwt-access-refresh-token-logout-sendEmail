@@ -2,6 +2,8 @@ package com.elmiraouy.jwtsecurity.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -56,8 +58,9 @@ public class AppUser implements UserDetails {
         return email;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<AppRole> appRoles =new ArrayList<>();
+    @OneToOne(fetch = FetchType.EAGER)
+    @Cascade(CascadeType.ALL)
+    private AppRole appRole;
     @OneToOne
     private Token token=new Token();
     @ManyToMany(mappedBy = "users")
@@ -69,9 +72,9 @@ public class AppUser implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (AppRole appRole : appRoles) {
+
             authorities.add(new SimpleGrantedAuthority(appRole.getRoleName()));
-        }
+
         return authorities;
     }
 
