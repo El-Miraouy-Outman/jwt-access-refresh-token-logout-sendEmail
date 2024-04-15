@@ -6,21 +6,20 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.Collection;
-import java.util.List;
 @Builder
 @Data
 
 public class AppUserResponseDto {
     private Long id;
-    private String firstName;
+    private  String firstName;
     private  String lastName;
     private  String email;
     private  String accessToken;
-    private   String refreshToken;
-    private String address;
-    private   String telephone;
-    private   String ville;
-    private   String roles;
+    private  String refreshToken;
+    private  String address;
+    private  String telephone;
+    private  String ville;
+    private  String roles;
     private Collection<Comment> comments;
 
     public AppUserResponseDto(Long id, String firstName, String lastName, String email, String accessToken, String refreshToken,

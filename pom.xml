@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.elmiraouy</groupId>
-	<artifactId>jwt-security</artifactId>
+	<artifactId>backOffice-backEnd</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>jwt-security</name>
 	<description>jwt-security</description>
