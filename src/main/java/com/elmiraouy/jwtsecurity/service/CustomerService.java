@@ -1,8 +1,8 @@
 package com.elmiraouy.jwtsecurity.service;
 
+import com.elmiraouy.jwtsecurity.criteria.CustomerCriteria;
 import com.elmiraouy.jwtsecurity.Dto.request.CustomerRequestDto;
 import com.elmiraouy.jwtsecurity.Dto.response.CustomerResponseDto;
-import com.elmiraouy.jwtsecurity.entities.Customer;
 
 import java.util.List;
 
@@ -15,4 +15,6 @@ public interface CustomerService {
 
     public List<CustomerResponseDto> findAll();
 
+    public List<CustomerResponseDto>  findByCriteria(CustomerCriteria customerCriteria);
+    public List<CustomerResponseDto> findCustomerHouse(CustomerCriteria customerCriteria);
 }

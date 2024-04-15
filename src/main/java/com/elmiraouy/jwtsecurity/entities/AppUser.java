@@ -1,9 +1,9 @@
 package com.elmiraouy.jwtsecurity.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,7 +35,31 @@ public class AppUser implements UserDetails {
     private String ville;
     private Date uuidExpiredDate;
     private String status ;
+    private String imageUrl;
 
+    @ManyToOne
+    private AppRole appRole;
+    @OneToOne
+    private Token token=new Token();
+    @ManyToMany(mappedBy = "users")
+    private Collection<Customer> customers;
+    @ManyToMany(mappedBy = "users")
+    private Collection<Hub> hubs;
+    @OneToMany(mappedBy = "user")
+    private Collection<Ticket> tickets;
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Collection<Comment> comments;
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
     public AppUser(Long id, String firstName, String lastName, String passWord, String email, String telephone, String address, String uuid,String ville) {
         this.id=id;
         this.firstName=firstName;
@@ -49,34 +73,14 @@ public class AppUser implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @Cascade(CascadeType.ALL)
-    private AppRole appRole;
-    @OneToOne
-    private Token token=new Token();
-    @ManyToMany(mappedBy = "users")
-    private Collection<Customer> customers;
-    @ManyToMany(mappedBy = "users")
-    private Collection<Hub> hubs;
-    @ManyToMany(mappedBy = "users")
-    private Collection<Ticket> tickets;
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-            authorities.add(new SimpleGrantedAuthority(appRole.getRoleName()));
+            authorities.add(new SimpleGrantedAuthority(appRole.getCode()));
 
         return authorities;
     }
+
 
     @Override
     public boolean isAccountNonExpired() {

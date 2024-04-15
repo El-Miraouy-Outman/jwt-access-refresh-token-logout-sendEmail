@@ -1,5 +1,6 @@
 package com.elmiraouy.jwtsecurity.Dto.request;
 
+import com.elmiraouy.jwtsecurity.entities.Comment;
 import lombok.Builder;
 import lombok.Data;
 
@@ -21,5 +22,6 @@ public class AppUserRequestDto
     private String uuid;
     List<String> roles;
     private String newPassWord;
+    private List<Comment> comments;
 
 }

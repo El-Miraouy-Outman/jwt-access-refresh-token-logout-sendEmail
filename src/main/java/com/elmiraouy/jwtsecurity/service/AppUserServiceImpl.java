@@ -4,6 +4,7 @@ import com.elmiraouy.jwtsecurity.Dto.request.AppUserRequestDto;
 import com.elmiraouy.jwtsecurity.Dto.response.AppUserResponseDto;
 import com.elmiraouy.jwtsecurity.entities.AppRole;
 import com.elmiraouy.jwtsecurity.entities.AppUser;
+import com.elmiraouy.jwtsecurity.entities.Comment;
 import com.elmiraouy.jwtsecurity.entities.Token;
 import com.elmiraouy.jwtsecurity.handlerException.AppUserException;
 import com.elmiraouy.jwtsecurity.handlerException.EntityNotFound;
@@ -30,14 +31,14 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUserResponseDto findUserByEmail(String email) throws  EntityNotFoundException {
+    public AppUserResponseDto findByEmail(String email) throws  EntityNotFoundException {
         AppUser user=appUserRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "User With id [%s] not found".formatted(email)));
         return appUserDtoMapper.appUserToDto(user);
     }
     @Override
-    public AppUserResponseDto findAppUserById(Long id) throws AppUserException {
+    public AppUserResponseDto findById(Long id) throws AppUserException {
         AppUser appUser=appUserRepository.findAppUserById(id)
                 .orElseThrow(() -> new AppUserException(
                         "User With id [%s] not ".formatted(id)));
@@ -46,7 +47,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUserResponseDto addUser(AppUserRequestDto userRequestDto) {
+    public AppUserResponseDto add(AppUserRequestDto userRequestDto) {
         return null;
     }
 
@@ -56,7 +57,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUserResponseDto updateUser(Long id, AppUserRequestDto userRequestDto) throws AppUserException {
+    public AppUserResponseDto update(Long id, AppUserRequestDto userRequestDto) throws AppUserException {
         AppUser user=appUserRepository.findById(id)
                 .orElseThrow(() -> new AppUserException(
                         "User With id [%s] not ".formatted(id)));
@@ -70,6 +71,16 @@ public class AppUserServiceImpl implements AppUserService {
                 "User With Email: [%s] not ".formatted(appUser.getEmail())));
         appUser1.setToken(token);
         appUserRepository.save(appUser1);
+    }
+
+
+    @Override
+    public AppUser addCommentToUser(Long idUser, Comment comment) {
+        AppUser user = appUserRepository.findById(idUser).orElseThrow(() -> new EntityNotFound(
+                "Customer With id [%s] not found".formatted(idUser))
+        );
+        user.getComments().add(comment);
+        return appUserRepository.save(user);
     }
 
 

@@ -1,5 +1,6 @@
 package com.elmiraouy.jwtsecurity.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,14 +32,18 @@ public class Ticket {
     private Date closureDate;
     private String finalSolution;
 
-    @ManyToMany
-    private Collection<AppUser> users=new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private AppUser user;
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
     @ManyToOne
     @JoinColumn(name = "resolution_id")
     private ResolutionProblem resolutionProblem;
+    @OneToMany(mappedBy = "ticket")
+    @JsonIgnore
+    private Collection<Comment> comments;
 
     public Ticket(
             Long id,

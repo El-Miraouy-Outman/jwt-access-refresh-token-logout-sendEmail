@@ -1,10 +1,12 @@
 package com.elmiraouy.jwtsecurity.Dto.request;
 
+import com.elmiraouy.jwtsecurity.entities.Comment;
 import com.elmiraouy.jwtsecurity.entities.PriorityTicket;
 import com.elmiraouy.jwtsecurity.entities.StatusTicket;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class TicketRequestDto
     private Long resolutionId;
     private Long customerId;
     private String customerEmail;
+    private Collection<Comment> comments;
 
 
 }

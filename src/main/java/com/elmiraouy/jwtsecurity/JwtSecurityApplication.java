@@ -13,11 +13,11 @@ public class JwtSecurityApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(JwtSecurityApplication.class, args);
 	}
-	@Bean
+	//@Bean
 	CommandLineRunner commandLineRunner(AppRoleRepository appRoleRepository){
 		return args -> {
-			AppRole appRole=AppRole.builder().roleName("SUPPORT").build();
-			
+			AppRole appRole=AppRole.builder().code("AD").build();
+			appRoleRepository.save(appRole);
 		};
 	}
 

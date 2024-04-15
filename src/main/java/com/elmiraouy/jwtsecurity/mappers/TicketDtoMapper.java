@@ -27,7 +27,10 @@ public class TicketDtoMapper implements Function<Ticket, TicketResponseDto> {
                 ticket.getCreationDate(),
                 ticket.getUpdateDate(),
                 ticket.getClosureDate(),
-                ticket.getFinalSolution()
+                ticket.getFinalSolution(),
+                //ticket.getComments(),
+                ticket.getUser().getFirstName()+" "+ticket.getUser().getLastName(),
+                ticket.getCustomer().getName()
                // , ticket.getResolutionProblem().getId(),
                 //ticket.getCustomer().getId()
         );

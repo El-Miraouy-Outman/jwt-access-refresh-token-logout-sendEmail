@@ -6,6 +6,9 @@ import lombok.Data;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 @Data
 public class CustomerResponseDto {
     private Long id ;
@@ -25,5 +28,7 @@ public class CustomerResponseDto {
     private boolean allowedAutoMeterReading;
     private Collection<AppUser> users;
     private Collection<Ticket> tickets;
+    private Map<String,String> housesNames ;
+
 
 }

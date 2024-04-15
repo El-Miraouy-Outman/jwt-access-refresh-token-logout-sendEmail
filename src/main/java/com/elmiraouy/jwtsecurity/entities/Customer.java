@@ -1,5 +1,6 @@
 package com.elmiraouy.jwtsecurity.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,7 +20,7 @@ public class Customer {
     private String name;
     private String password;
     private String email;
-    private String phone;
+    private String phone_number;
     private String address;
     private String uuid;
     private String ville;
@@ -32,22 +33,34 @@ public class Customer {
     private boolean allowedAutoMeterReading;
 
     @ManyToMany
+    @JsonIgnore
     private Collection<AppUser> users;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer",fetch = FetchType.EAGER)
+    @JsonIgnore
     private Collection<Ticket> tickets;
     @OneToMany(mappedBy = "customer")
+    @JsonIgnore
     private Collection<HistoryCustomer> listHistoryCustomers;
     @ManyToMany
     @JoinTable(name = "customers_hubs",
             joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "hubs_id"))
+    @JsonIgnore
     private Collection<Hub> hubs;
 
     @ElementCollection
     @CollectionTable(name = "customer_house_names",
             joinColumns = @JoinColumn(name = "customer_id"))
     @MapKeyColumn(name = "house_names_key")
+
     private Map<String,String> housesNames = new HashMap<>();
 
+    public Map<String, String> getHouses() {
+        return housesNames;
+    }
+
+    public void setHouses(Map<String, String> houses) {
+        this.housesNames = houses;
+    }
 }

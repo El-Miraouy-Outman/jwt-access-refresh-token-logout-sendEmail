@@ -1,5 +1,6 @@
 package com.elmiraouy.jwtsecurity.service;
 
+import com.elmiraouy.jwtsecurity.criteria.CustomerCriteria;
 import com.elmiraouy.jwtsecurity.Dto.request.CustomerRequestDto;
 import com.elmiraouy.jwtsecurity.Dto.response.CustomerResponseDto;
 import com.elmiraouy.jwtsecurity.entities.Customer;
@@ -57,5 +58,18 @@ public class CustomerServiceImpl implements CustomerService {
        return customerRepository.findAll()
                .stream().map(customerDtoMapper)
                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CustomerResponseDto> findByCriteria(CustomerCriteria customerCriteria) {
+
+        return customerRepository.findByCriteria(customerCriteria.getEmail(),customerCriteria.getPhone_number())
+                .stream().map(customerDtoMapper)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CustomerResponseDto> findCustomerHouse(CustomerCriteria customerCriteria) {
+         return findByCriteria(customerCriteria);
     }
 }

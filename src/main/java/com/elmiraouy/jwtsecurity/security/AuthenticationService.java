@@ -1,11 +1,13 @@
 package com.elmiraouy.jwtsecurity.security;
 
 import com.elmiraouy.jwtsecurity.Dto.request.AppUserRequestDto;
+import com.elmiraouy.jwtsecurity.Dto.response.AppRoleResponse;
 import com.elmiraouy.jwtsecurity.Dto.response.AppUserResponseDto;
 import com.elmiraouy.jwtsecurity.entities.AppRole;
 import com.elmiraouy.jwtsecurity.entities.AppUser;
 import com.elmiraouy.jwtsecurity.entities.Token;
 import com.elmiraouy.jwtsecurity.handlerException.AppUserException;
+import com.elmiraouy.jwtsecurity.handlerException.EntityNotFound;
 import com.elmiraouy.jwtsecurity.mail.MailService;
 import com.elmiraouy.jwtsecurity.mail.MailStructure;
 import com.elmiraouy.jwtsecurity.mappers.AppUserDtoMapper;
@@ -45,6 +47,7 @@ public class AuthenticationService {
     private final AppUserService appUserService;
     private final MailService mailService;
     private final AppUserDtoMapper appUserDtoMapper;
+
     public AppUserResponseDto register(AppUserRequestDto request) throws AppUserException, ConnectException {
 
         Optional<AppUser> userByEmail = appUserRepository.findByEmail(request.getEmail());
@@ -55,7 +58,7 @@ public class AuthenticationService {
         System.out.println(" uuid Generer :"+uuid);
         try{
             MailStructure mailStructure = mailService.confirmedEmail(request.getEmail(),uuid);
-            mailService.sendMail(mailStructure);
+           // mailService.sendMail(mailStructure);
         }
         catch (Exception c){
             throw  new ConnectException("Verifier votre email ou connection internet: ");
@@ -64,6 +67,7 @@ public class AuthenticationService {
         LocalDateTime expirationDateTime = LocalDateTime.now().plusMinutes(3);
         Date expirationDate = Date.from(expirationDateTime.atZone(ZoneId.systemDefault()).toInstant());
         System.out.println("experation date uuid:"+ expirationDate);
+
         var user = AppUser.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
@@ -74,6 +78,7 @@ public class AuthenticationService {
                 .address(request.getAddress())
                 .telephone(request.getTelephone())
                 .ville(request.getVille())
+                //.appRole(appRoleSupport)
                 .build();
         AppUser saveUser = appUserRepository.save(user);
         AppUserResponseDto response=AppUserResponseDto.builder().build();
@@ -90,7 +95,7 @@ public class AuthenticationService {
         ));
         var user= appUserRepository.findByEmail(email)
                 .orElseThrow(() -> new AppUserException(
-                        "User With id [%s] not ".formatted(email)));;
+                        "User With id [%s] not ".formatted(email)));
         var jwtToken = jwtService.generateToken(user);
         var jwtRefreshToken = jwtService.generateRefreshToken(user);
 
@@ -108,7 +113,7 @@ public class AuthenticationService {
             user.setToken(token);
             appUserService.addTokenToUser(user,tokenRepository.save(token));
 
-        System.out.println("  -------------------- Authenticate ");
+        System.out.println("  --------------- Authenticate ------------");
         return appUserDtoMapper.appUserToDto(appUserRepository.save(user));
     }
 
@@ -167,16 +172,22 @@ public class AuthenticationService {
         AppUser appUser=appUserRepository.findByEmail(appUserRequestDto.getEmail())
                 .orElseThrow(() -> new AppUserException(
                         "User With id [%s] not ".formatted(appUserRequestDto.getEmail())));
+
         appUser.setPassword(passwordEncoder.encode(appUserRequestDto.getPassWord()));
+        AppRole appRoleSupport=appRoleRepository.findByCode("AD")
+                .orElseThrow(() -> new EntityNotFound(
+                        "Role With name [%s] not exist verified database".formatted("AD"))
+                );
 
-        AppRole appRole=appRoleRepository.findByRoleName("SUPPORT").orElseThrow(null);
 
+        AppRole appRole=AppRole.builder().roleName(appRoleSupport.getRoleName()).code(appRoleSupport.getCode()).id(appRoleSupport.getId()).build();
+        System.out.println("hello my role name is : "+appRoleSupport);
         appUser.setAppRole(appRole);
-
         AppUser saveUser = appUserRepository.save(appUser);
-        AppUserResponseDto response=AppUserResponseDto.builder().build();
-        BeanUtils.copyProperties(saveUser,response);
-        return response;
+        System.out.println("role 1 : "+saveUser.getAppRole().getRoleName());
+        appRoleSupport.getUsers().add(saveUser);
+        appRoleRepository.save(appRoleSupport);
+        return  appUserDtoMapper.appUserToDto(saveUser);
 
     }
     public  AppUserResponseDto sendUuidToUser(AppUserRequestDto appUserRequestDto)
@@ -199,10 +210,7 @@ public class AuthenticationService {
             throw  new ConnectException("Verifier votre email ou connection internet: ");
         }
         AppUser saveUser = appUserRepository.save(appUser);
-        AppUserResponseDto response=AppUserResponseDto.builder().build();
-        BeanUtils.copyProperties(saveUser,response);
-        return response;
-
+        return  appUserDtoMapper.appUserToDto(saveUser);
     }
     public  AppUserResponseDto changePassWord(AppUserRequestDto appUserRequestDto)
             throws AppUserException {

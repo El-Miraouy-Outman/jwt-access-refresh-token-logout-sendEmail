@@ -19,11 +19,13 @@ public class AppUserDtoMapper implements Function<AppUser, AppUserResponseDto> {
                 appUser.getEmail(),
                 appUser.getAddress(),
                 appUser.getTelephone(),
-                appUser.getVille()
+                appUser.getVille(),
+                appUser.getAppRole().getCode()
         );
     }
 
     public AppUserResponseDto appUserToDto(AppUser appUser){
+        System.out.println("role :"+appUser.getAppRole().getRoleName());
         return  new AppUserResponseDto(
                 appUser.getId(),
                 appUser.getFirstName(),
@@ -34,7 +36,20 @@ public class AppUserDtoMapper implements Function<AppUser, AppUserResponseDto> {
                 appUser.getAddress(),
                 appUser.getTelephone(),
                 appUser.getVille(),
-                appUser.getAppRole().getRoleName()
+                appUser.getAppRole().getRoleName(),
+                appUser.getComments()
+        );
+    }
+    public AppUserResponseDto appUserToDtoGeneral(AppUser appUser){
+        return  new AppUserResponseDto(
+                appUser.getId(),
+                appUser.getFirstName(),
+                appUser.getLastName(),
+                appUser.getEmail(),
+                appUser.getAddress(),
+                appUser.getTelephone(),
+                appUser.getVille(),
+                appUser.getComments()
         );
     }
     public AppUser appUserDtoToRequest(AppUserRequestDto appUserRequestDto){

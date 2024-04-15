@@ -18,7 +18,7 @@ public class CustomerDtoMapper implements Function<Customer, CustomerResponseDto
         customerResponseDto.setName(customer.getName());
         customerResponseDto.setPassword(customer.getPassword());
         customerResponseDto.setEmail(customer.getEmail());
-        customerResponseDto.setPhone(customer.getPhone());
+        customerResponseDto.setPhone(customer.getPhone_number());
         customerResponseDto.setAddress(customer.getAddress());
         customerResponseDto.setUuid(customer.getUuid());
         customerResponseDto.setVille(customer.getVille());
@@ -29,8 +29,9 @@ public class CustomerDtoMapper implements Function<Customer, CustomerResponseDto
         customerResponseDto.setAllowedPhaseChange(customer.isAllowedPhaseChange());
         customerResponseDto.setAllowedBudgetAlert(customer.isAllowedBudgetAlert());
         customerResponseDto.setAllowedAutoMeterReading(customer.isAllowedAutoMeterReading());
-        customerResponseDto.setUsers(customer.getUsers());
-        customerResponseDto.setTickets(customer.getTickets());
+        //customerResponseDto.setUsers(customer.getUsers());
+        //customerResponseDto.setTickets(customer.getTickets());
+        customerResponseDto.setHousesNames(customer.getHouses());
         return customerResponseDto;
     }
 
@@ -40,7 +41,7 @@ public class CustomerDtoMapper implements Function<Customer, CustomerResponseDto
         customer.setName(customerRequestDto.getName());
         customer.setPassword(customerRequestDto.getPassword());
         customer.setEmail(customerRequestDto.getEmail());
-        customer.setPhone(customerRequestDto.getPhone());
+        customer.setPhone_number(customerRequestDto.getPhone());
         customer.setAddress(customerRequestDto.getAddress());
         customer.setUuid(customerRequestDto.getUuid());
         customer.setVille(customerRequestDto.getVille());
@@ -53,6 +54,8 @@ public class CustomerDtoMapper implements Function<Customer, CustomerResponseDto
         customer.setAllowedAutoMeterReading(customerRequestDto.isAllowedAutoMeterReading());
         customer.setUsers(customerRequestDto.getUsers());
         customer.setTickets(customerRequestDto.getTickets());
+        //customer.setHousesNames(customerRequestDto.getHouses());
+
         return customer;
 
     }
